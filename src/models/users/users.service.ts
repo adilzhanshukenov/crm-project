@@ -7,61 +7,70 @@ import { UpdateUsersDto } from './dto/update-users.dto';
 
 @Injectable()
 export class UsersService {
-    constructor(@InjectModel(Users.name) private usersModel: Model<UsersDocument>) {}
-    
-    /**
-     * Создать пользователя
-     * @param {createUsersDto} CreateUsersDto - схема создания
-     */
-    async createUser(createUsersDto: CreateUsersDto): Promise<Users> {
-        const createdUsers = new this.usersModel(createUsersDto);
-        return createdUsers.save();
-    }
+  constructor(
+    @InjectModel(Users.name) private usersModel: Model<UsersDocument>,
+  ) {}
 
-    /**
-     * Получить пользователя
-     * @returns {{ username: string, email: string}} - данные пользователя
-     */
-    async geAllUsers(): Promise<Users[]> {
-        return await this.usersModel.find({}, 'username email', {lean: true});
-    }
+  /**
+   * Создать пользователя
+   * @param {createUsersDto} CreateUsersDto - схема создания
+   */
+  async createUser(createUsersDto: CreateUsersDto): Promise<Users> {
+    const createdUsers = new this.usersModel(createUsersDto);
+    return createdUsers.save();
+  }
 
-    /**
-     * Получить пользователя
-     * @param {userId} string - id пользователя
-     * @param {updateUsersDto} UpdateUsersDto - схема обновления   
-     * @returns {{ username: string, email: string}} - данные пользователя
-     */
-    async getUser(userId: string): Promise<UsersDocument> {
-        let result = await this.usersModel.findOne({_id: userId}, '-_id username email', {lean: true});
-        console.log({result})
-        return result;
-    }
+  /**
+   * Получить пользователя
+   * @returns {{ username: string, email: string}} - данные пользователя
+   */
+  async geAllUsers(): Promise<Users[]> {
+    return await this.usersModel.find({}, 'username email', { lean: true });
+  }
 
-    /**
-     * Обновить пользователя
-     * @param {userId} string - id пользователя
-     * @param {updateUsersDto} UpdateUsersDto - схема обновления     
-     */
-    async updateUser(userId: string, updateUsersDto: UpdateUsersDto) {
-        // const existingUser = await this.usersModel.findByIdAndUpdate(userId, updateUsersDto, { new: true });
-        // if (!existingUser) {
-        //     throw new NotFoundException(`User #${userId} not found`);
-        // }
-        const updateUser = await this.usersModel.updateOne({_id: userId}, updateUsersDto)
-        if(!updateUser.modifiedCount && !updateUser.matchedCount){
-            throw new NotFoundException(`User #${userId} not found`)
-        }
-    }
+  /**
+   * Получить пользователя
+   * @param {userId} string - id пользователя
+   * @param {updateUsersDto} UpdateUsersDto - схема обновления
+   * @returns {{ username: string, email: string}} - данные пользователя
+   */
+  async getUser(userId: string): Promise<UsersDocument> {
+    const result = await this.usersModel.findOne(
+      { _id: userId },
+      '-_id username email',
+      { lean: true },
+    );
+    console.log({ result });
+    return result;
+  }
 
-    /**
-     * Удалить пользователя
-     * @param {userId} string - id пользователя    
-     */
-    async deleteUser(userId: string) {
-        const deletedUser = await this.usersModel.deleteOne({_id: userId});
-        if (!deletedUser.deletedCount) {
-            throw new NotFoundException(`User #${userId} not found`);
-        }
+  /**
+   * Обновить пользователя
+   * @param {userId} string - id пользователя
+   * @param {updateUsersDto} UpdateUsersDto - схема обновления
+   */
+  async updateUser(userId: string, updateUsersDto: UpdateUsersDto) {
+    // const existingUser = await this.usersModel.findByIdAndUpdate(userId, updateUsersDto, { new: true });
+    // if (!existingUser) {
+    //     throw new NotFoundException(`User #${userId} not found`);
+    // }
+    const updateUser = await this.usersModel.updateOne(
+      { _id: userId },
+      updateUsersDto,
+    );
+    if (!updateUser.modifiedCount && !updateUser.matchedCount) {
+      throw new NotFoundException(`User #${userId} not found`);
     }
+  }
+
+  /**
+   * Удалить пользователя
+   * @param {userId} string - id пользователя
+   */
+  async deleteUser(userId: string) {
+    const deletedUser = await this.usersModel.deleteOne({ _id: userId });
+    if (!deletedUser.deletedCount) {
+      throw new NotFoundException(`User #${userId} not found`);
+    }
+  }
 }
