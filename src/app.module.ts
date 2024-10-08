@@ -5,7 +5,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { UsersModule } from './models/users/users.module';
 import { UsersSchema } from './models/users/users.schema';
-import { AuthModule } from './auth/auth.module';
+import { AuthModule } from './models/auth/auth.module';
 import { CompanyModule } from './models/company/company.module';
 
 @Module({
@@ -23,18 +23,17 @@ import { CompanyModule } from './models/company/company.module';
       //     uri: 'mongodb://127.0.0.1:27017/crm-project'
       //   })
       // },
-      
+
       // inject: [ConfigService],
       useFactory: () => ({
         uri: 'mongodb+srv://shukenovadilzhan:rzKWvJfKOi12o3JD@cluster-adil.6mp2f.mongodb.net/crmproject',
       }),
     }),
-   UsersModule,
-   CompanyModule,
-   AuthModule
+    UsersModule,
+    CompanyModule,
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService],
 })
 export class AppModule {}
-
