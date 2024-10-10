@@ -31,7 +31,6 @@ export class UsersService {
   /**
    * Получить пользователя
    * @param {userId} string - id пользователя
-   * @param {updateUsersDto} UpdateUsersDto - схема обновления
    * @returns {{ username: string, email: string}} - данные пользователя
    */
   async getUser(userId: string): Promise<UsersDocument> {
@@ -39,6 +38,22 @@ export class UsersService {
       { _id: userId },
       '-_id username email',
       { lean: true },
+    );
+    return result;
+  }
+
+  /**
+   * Получить пользователя по имени
+   * @param {username} string - схема обновления
+   * @returns {{ username: string}} - данные пользователя
+   */
+  async findUserByName(username: string): Promise<UsersDocument> {
+    const result = await this.usersModel.findOne(
+      { username },
+      'username password',
+      {
+        lean: true,
+      },
     );
     console.log({ result });
     return result;

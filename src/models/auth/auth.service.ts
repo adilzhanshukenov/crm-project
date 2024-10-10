@@ -8,8 +8,17 @@ import * as bcrypt from 'bcrypt';
 import { UserLoginDto } from './dto/user-login.dto';
 import { InjectModel } from '@nestjs/mongoose';
 import { Users, UsersDocument } from '../users/users.schema';
-import { Model } from 'mongoose';
+import { Model, Types } from 'mongoose';
 import { jwtConstants } from './auth.constants';
+import { UsersService } from '../users/users.service';
+
+// type AuthInput = { username: string; password: string };
+type SignInData = { userId: Types.ObjectId; username: string };
+type AuthResult = {
+  access_token: string;
+  userId: Types.ObjectId;
+  username: string;
+};
 
 @Injectable()
 export class AuthService {
@@ -17,25 +26,34 @@ export class AuthService {
     private readonly jwtService: JwtService,
     @InjectModel(Users.name)
     private readonly usersModel: Model<UsersDocument>,
+    private usersService: UsersService,
   ) {}
 
-  async validateUser(username: string, password: string): Promise<any> {
-    // Replace this logic with your user validation (like from a database)
-    const user = { username: 'test', password: 'test123' }; // Mocked user
-
-    const passwordIsValid = await bcrypt.compare(password, user.password);
-    if (passwordIsValid) {
-      const { password, ...result } = user;
-      return result;
+  async authenticate(input: UserLoginDto): Promise<AuthResult> {
+    const user = await this.validateUser(input);
+    if (!user) {
+      throw new UnauthorizedException('The user is not found.');
     }
-    return null;
+    return this.login(user);
   }
 
-  async login(userInfo: UserLoginDto) {
-    // const payload = { username: userInfo.username, sub: userInfo.userId };
-    // return {
-    //   access_token: this.jwtService.sign(payload),
-    // };
+  async validateUser(input: UserLoginDto): Promise<SignInData> {
+    const user = await this.usersService.findUserByName(input.username);
+    // if (user && user.password === input.password) {
+    //   return {
+    //     userId: user._id,
+    //     username: user.username,
+    //   };
+    // }
+
+    const passwordIsValid = await bcrypt.compare(input.password, user.password);
+    if (!passwordIsValid) {
+      throw new UnauthorizedException('The password is incorrect');
+    }
+    return { userId: user._id, username: user.username };
+  }
+
+  async login(userInfo: SignInData) {
     const user = await this.usersModel.findOne(
       { username: userInfo.username },
       'password',
@@ -44,25 +62,21 @@ export class AuthService {
     if (!user) {
       throw new NotFoundException('The user not found');
     }
-    // const passwordIsValid = await bcrypt.compare(
-    //   userInfo.password,
-    //   user.password,
-    // );
-    const passwordIsValid = userInfo.password === user.password;
-    if (!passwordIsValid) {
-      throw new UnauthorizedException('The password is incorrect');
-    }
+
+    const payload = {
+      sub: userInfo.username + user._id,
+      username: userInfo.username,
+      _id: user._id,
+    };
+
+    const access_token = await this.jwtService.signAsync(payload, {
+      secret: jwtConstants.secret,
+    });
+
     return {
-      access_token: await this.jwtService.signAsync(
-        {
-          sub: userInfo.username + user._id,
-          username: userInfo.username,
-          _id: user._id,
-        },
-        {
-          secret: jwtConstants.secret,
-        },
-      ),
+      access_token,
+      username: userInfo.username,
+      userId: user._id,
     };
   }
 }

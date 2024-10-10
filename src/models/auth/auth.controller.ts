@@ -1,6 +1,15 @@
-import { Body, Controller, HttpCode, HttpStatus, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  HttpCode,
+  HttpStatus,
+  NotImplementedException,
+  Post,
+} from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { UserLoginDto } from './dto/user-login.dto';
+import { ApiOperation, ApiResponse } from '@nestjs/swagger';
 
 @Controller('auth')
 export class AuthController {
@@ -9,7 +18,18 @@ export class AuthController {
   //@UseGuards(LocalAuthGuard)
   @Post('login')
   @HttpCode(HttpStatus.OK)
-  async login(@Body() userInfo: UserLoginDto) {
-    return this.authService.login(userInfo);
+  @ApiOperation({ summary: 'User Login' })
+  @ApiResponse({
+    status: 200,
+    description: 'The record found',
+    type: [UserLoginDto],
+  })
+  async login(@Body() input: UserLoginDto) {
+    return this.authService.authenticate(input);
+  }
+
+  @Get('me')
+  async getUserInfo() {
+    throw new NotImplementedException();
   }
 }

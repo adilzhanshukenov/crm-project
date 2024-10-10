@@ -6,12 +6,15 @@ import {
   Delete,
   Body,
   Param,
+  UseGuards,
 } from '@nestjs/common';
 import { ApiBody, ApiOperation, ApiParam, ApiResponse } from '@nestjs/swagger';
 import { UsersService } from './users.service';
 import { CreateUsersDto } from './dto/create-users.dto';
 import { UpdateUsersDto } from './dto/update-users.dto';
+import { AuthGuard } from '../auth/guards/auth.guard';
 
+@UseGuards(AuthGuard)
 @Controller('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
@@ -23,13 +26,12 @@ export class UsersController {
   })
   @ApiResponse({
     status: 201,
-    description: 'The user succesfully created',
+    description: 'The user was succesfully created',
   })
   async createUser(@Body() createUsersDto: CreateUsersDto) {
     await this.usersService.createUser(createUsersDto);
   }
 
-  // @UseGuards(JwtAuthGuard)
   @Get()
   @ApiOperation({ summary: 'Get All Users' })
   @ApiResponse({
@@ -54,6 +56,22 @@ export class UsersController {
   })
   async findUserById(@Param('id') userId: string) {
     return this.usersService.getUser(userId);
+  }
+
+  @Get('byUsername/:username')
+  @ApiOperation({ summary: 'Find User By Username' })
+  @ApiParam({
+    name: 'username', // Name of the parameter
+    type: 'string', // Type of the parameter
+    description: 'The Username of the user', // Description
+    example: 'username1', // Example for Swagger
+  })
+  @ApiResponse({
+    status: 201,
+    description: 'The user was found',
+  })
+  async findUserByUsername(@Param('username') username: string) {
+    return this.usersService.findUserByName(username);
   }
 
   @Put(':id')
@@ -84,7 +102,7 @@ export class UsersController {
   })
   @ApiResponse({
     status: 404,
-    description: 'The user not found',
+    description: 'The user was not found',
   })
   async deleteUser(@Param('id') userId: string) {
     await this.usersService.deleteUser(userId);
