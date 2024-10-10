@@ -17,8 +17,6 @@ export class AuthGuard implements CanActivate {
     console.log({ headers: request.headers });
     const token = authorization?.split(' ')[1];
     if (!token) {
-      console.error('Token empty');
-
       throw new UnauthorizedException();
     }
 
@@ -26,15 +24,12 @@ export class AuthGuard implements CanActivate {
       const tokenPayload = await this.jwtService.verifyAsync(token, {
         secret: jwtConstants.secret,
       });
-      console.log({ tokenPayload });
       request.user = {
         userId: tokenPayload.sub,
         username: tokenPayload.username,
       };
       return true;
     } catch (error) {
-      console.error({ error });
-
       throw new UnauthorizedException(error);
     }
   }
