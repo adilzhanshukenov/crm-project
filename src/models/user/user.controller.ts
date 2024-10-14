@@ -9,27 +9,27 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { ApiBody, ApiOperation, ApiParam, ApiResponse } from '@nestjs/swagger';
-import { UsersService } from './users.service';
-import { CreateUsersDto } from './dto/create-users.dto';
-import { UpdateUsersDto } from './dto/update-users.dto';
-import { AuthGuard } from '../auth/guards/auth.guard';
+import { UserService } from './user.service';
+import { CreateUserDto } from './dto/create-user.dto';
+import { UpdateUserDto } from './dto/update-user.dto';
+import { PassportJwtAuthGuard } from '../auth/guards/passport-jwt.guard';
 
-@UseGuards(AuthGuard)
-@Controller('users')
-export class UsersController {
-  constructor(private readonly usersService: UsersService) {}
+@UseGuards(PassportJwtAuthGuard)
+@Controller('user')
+export class UserController {
+  constructor(private readonly userService: UserService) {}
 
   @Post()
   @ApiOperation({ summary: 'Create User' })
   @ApiBody({
-    type: CreateUsersDto,
+    type: CreateUserDto,
   })
   @ApiResponse({
     status: 201,
     description: 'The user was succesfully created',
   })
-  async createUser(@Body() createUsersDto: CreateUsersDto) {
-    await this.usersService.createUser(createUsersDto);
+  async createUser(@Body() createUsersDto: CreateUserDto) {
+    await this.userService.createUser(createUsersDto);
   }
 
   @Get()
@@ -39,7 +39,7 @@ export class UsersController {
     description: 'All users are shown',
   })
   async geAllUsers() {
-    return this.usersService.geAllUsers();
+    return this.userService.geAllUsers();
   }
 
   @Get(':id')
@@ -55,7 +55,7 @@ export class UsersController {
     description: 'The user was found',
   })
   async findUserById(@Param('id') userId: string) {
-    return this.usersService.getUser(userId);
+    return this.userService.getUser(userId);
   }
 
   @Get('byUsername/:username')
@@ -71,13 +71,13 @@ export class UsersController {
     description: 'The user was found',
   })
   async findUserByUsername(@Param('username') username: string) {
-    return this.usersService.findUserByName(username);
+    return this.userService.findUserByName(username);
   }
 
   @Put(':id')
   @ApiOperation({ summary: 'Update User' })
   @ApiBody({
-    type: UpdateUsersDto,
+    type: UpdateUserDto,
   })
   @ApiResponse({
     status: 200,
@@ -89,9 +89,9 @@ export class UsersController {
   })
   async updateUser(
     @Param('id') userId: string,
-    @Body() updateUsersDto: UpdateUsersDto,
+    @Body() updateUserDto: UpdateUserDto,
   ) {
-    await this.usersService.updateUser(userId, updateUsersDto);
+    await this.userService.updateUser(userId, updateUserDto);
   }
 
   @Delete(':id')
@@ -105,6 +105,6 @@ export class UsersController {
     description: 'The user was not found',
   })
   async deleteUser(@Param('id') userId: string) {
-    await this.usersService.deleteUser(userId);
+    await this.userService.deleteUser(userId);
   }
 }
