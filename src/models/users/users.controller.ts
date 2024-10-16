@@ -81,7 +81,7 @@ export class UsersController {
   })
   @ApiResponse({
     status: 200,
-    description: 'The user was succesfully updated',
+    description: 'The user was successfully updated',
   })
   @ApiResponse({
     status: 404,
@@ -98,7 +98,7 @@ export class UsersController {
   @ApiOperation({ summary: 'Delete User' })
   @ApiResponse({
     status: 200,
-    description: 'The user was succesfully deleted',
+    description: 'The user was successfully deleted',
   })
   @ApiResponse({
     status: 404,
