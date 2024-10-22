@@ -67,7 +67,7 @@ export class CompanyService {
    * @param {companyId} string - Id компании
    */
   async deleteCompany(companyId: string) {
-    const deleteCompany = this.companyModel.deleteOne({ _id: companyId });
+    const deleteCompany = await this.companyModel.deleteOne({ _id: companyId });
     if (!(await deleteCompany).deletedCount) {
       throw new NotFoundException(`'The company #${companyId} was not found.'`);
     }

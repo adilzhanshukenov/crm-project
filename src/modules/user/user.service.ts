@@ -23,6 +23,7 @@ export class UserService {
    * @returns {{ username: string, email: string}} - данные пользователя
    */
   async geAllUsers(): Promise<User[]> {
+    console.debug('hello!');
     return await this.userModel.find({}, 'username email', { lean: true });
   }
 

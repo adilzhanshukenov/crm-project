@@ -14,7 +14,6 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { PassportJwtAuthGuard } from '../auth/guards/passport-jwt.guard';
 
-@UseGuards(PassportJwtAuthGuard)
 @Controller('user')
 export class UserController {
   constructor(private readonly userService: UserService) {}
@@ -32,6 +31,7 @@ export class UserController {
     await this.userService.createUser(createUsersDto);
   }
 
+  @UseGuards(PassportJwtAuthGuard)
   @Get()
   @ApiOperation({ summary: 'Get All Users' })
   @ApiResponse({
@@ -81,7 +81,7 @@ export class UserController {
   })
   @ApiResponse({
     status: 200,
-    description: 'The user was successfully updated',
+    description: 'The user was succesfully updated',
   })
   @ApiResponse({
     status: 404,
@@ -98,7 +98,7 @@ export class UserController {
   @ApiOperation({ summary: 'Delete User' })
   @ApiResponse({
     status: 200,
-    description: 'The user was successfully deleted',
+    description: 'The user was succesfully deleted',
   })
   @ApiResponse({
     status: 404,
