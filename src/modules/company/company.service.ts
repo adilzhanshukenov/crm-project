@@ -25,7 +25,7 @@ export class CompanyService {
    * @returns {{ name: string, address: string, industry: string}} - данные о компании
    */
   async getAllCompanies(): Promise<Company[]> {
-    return await this.companyModel.find({}, 'name address industry', {
+    return this.companyModel.find({}, 'name address industry', {
       lean: true,
     });
   }
@@ -50,14 +50,11 @@ export class CompanyService {
    * @returns {{ name: string, address: string, industry: string}} - данные о компании
    */
   async updateCompany(companyId: string, updateCompanyDto: UpdateCompanyDto) {
-    const updatedCompany = this.companyModel.updateOne(
+    const updatedCompany = await this.companyModel.updateOne(
       { _id: companyId },
       updateCompanyDto,
     );
-    if (
-      !(await updatedCompany).modifiedCount &&
-      !(await updatedCompany).matchedCount
-    ) {
+    if (!updatedCompany.modifiedCount && !updatedCompany.matchedCount) {
       throw new NotFoundException(`The company #${companyId} was not found`);
     }
   }
@@ -68,7 +65,7 @@ export class CompanyService {
    */
   async deleteCompany(companyId: string) {
     const deleteCompany = await this.companyModel.deleteOne({ _id: companyId });
-    if (!(await deleteCompany).deletedCount) {
+    if (!deleteCompany.deletedCount) {
       throw new NotFoundException(`'The company #${companyId} was not found.'`);
     }
   }

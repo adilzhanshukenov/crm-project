@@ -15,6 +15,14 @@ export class ProjectService {
     return createdProject.save();
   }
 
+  async getProjectById(projectId: string): Promise<Project> {
+    return await this.projectModel.findOne(
+      { _id: projectId },
+      'name description status',
+      { lean: true },
+    );
+  }
+
   async getAllProjectsOfCompany(companyID: string): Promise<Project[]> {
     return await this.projectModel.find(
       { company: companyID },

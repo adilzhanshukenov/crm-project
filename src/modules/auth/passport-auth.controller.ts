@@ -10,9 +10,9 @@ import {
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { ApiOperation, ApiResponse } from '@nestjs/swagger';
-import { LocalAuthGuard } from './guards/passport-local.guard';
+import { LocalAuthGuard } from '../../guards/passport-local.guard';
 import { CreateUserDto } from '../user/dto/create-user.dto';
-import { PassportJwtAuthGuard } from './guards/passport-jwt.guard';
+import { PassportJwtAuthGuard } from '../../guards/passport-jwt.guard';
 
 @Controller('auth')
 export class PassportAuthController {

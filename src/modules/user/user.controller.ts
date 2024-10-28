@@ -12,7 +12,7 @@ import { ApiBody, ApiOperation, ApiParam, ApiResponse } from '@nestjs/swagger';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { PassportJwtAuthGuard } from '../auth/guards/passport-jwt.guard';
+import { PassportJwtAuthGuard } from '../../guards/passport-jwt.guard';
 
 @Controller('user')
 export class UserController {

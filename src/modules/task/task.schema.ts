@@ -18,7 +18,7 @@ export class Task {
   status: string;
 
   @Prop()
-  due_date: string;
+  due_date: Date;
 
   @Prop({ enum: ['Low', 'Medium', 'High'], default: 'Medium' })
   priority: string;
