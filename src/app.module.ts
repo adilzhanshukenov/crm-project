@@ -8,6 +8,7 @@ import { AuthModule } from './modules/auth/auth.module';
 import { CompanyModule } from './modules/company/company.module';
 import { ConfigService } from '@nestjs/config';
 import { ProjectModule } from './modules/project/project.module';
+import { UserCompanyModule } from './modules/user-company/user-company.module';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -24,6 +25,7 @@ import { ProjectModule } from './modules/project/project.module';
     UserModule,
     CompanyModule,
     ProjectModule,
+    UserCompanyModule,
     AuthModule,
   ],
   controllers: [AppController],

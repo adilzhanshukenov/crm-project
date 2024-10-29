@@ -21,4 +21,14 @@ export class UserCompanyService {
     const createdUserCompany = new this.userCompanyModel(createUserCompanyDto);
     return createdUserCompany.save();
   }
+
+  async getAllUsersOfCompany(companyId: string): Promise<UserCompany[]> {
+    return await this.userCompanyModel.find(
+      { companyId },
+      '-_id userId companyId role',
+      {
+        lean: true,
+      },
+    );
+  }
 }

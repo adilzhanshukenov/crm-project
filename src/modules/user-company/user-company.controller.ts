@@ -1,4 +1,4 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post } from '@nestjs/common';
 import { UserCompanyService } from './user-company.service';
 import { CreateUserCompanyDto } from './dto/create-user-company.dto';
 import { ApiBody, ApiOperation, ApiResponse } from '@nestjs/swagger';
@@ -20,5 +20,15 @@ export class UserCompanyController {
     @Body() createUserCompanyDto: CreateUserCompanyDto,
   ) {
     await this.userCompanyService.assignUserToCompany(createUserCompanyDto);
+  }
+
+  @Get(':companyId')
+  @ApiOperation({ summary: 'Get All Users of Company' })
+  @ApiResponse({
+    status: 201,
+    description: 'All users are shown',
+  })
+  async getAllUsersOfCompany(@Param('companyId') companyId: string) {
+    return this.userCompanyService.getAllUsersOfCompany(companyId);
   }
 }

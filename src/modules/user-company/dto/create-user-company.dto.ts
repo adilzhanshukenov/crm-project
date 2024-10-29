@@ -10,7 +10,7 @@ export class CreateUserCompanyDto {
     example: 'Ivan',
     description: 'Username',
   })
-  readonly user: Types.ObjectId;
+  readonly userId: Types.ObjectId;
 
   @IsString()
   @IsNotEmpty()
@@ -19,7 +19,7 @@ export class CreateUserCompanyDto {
     example: 'Ivan',
     description: 'Username',
   })
-  readonly company: Types.ObjectId;
+  readonly companyId: Types.ObjectId;
 
   @IsString()
   @ApiProperty({
