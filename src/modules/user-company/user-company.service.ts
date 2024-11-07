@@ -22,13 +22,15 @@ export class UserCompanyService {
     return createdUserCompany.save();
   }
 
-  async getAllUsersOfCompany(companyId: string): Promise<UserCompany[]> {
-    return await this.userCompanyModel.find(
-      { companyId },
-      '-_id userId companyId role',
-      {
-        lean: true,
-      },
-    );
+  /**
+   * Get all users of company
+   * @param {company} string - ID компании
+   */
+  async getAllUsersOfCompany(company: string): Promise<UserCompany[]> {
+    return await this.userCompanyModel
+      .find({ company }, '-_id user company role')
+      .populate('user', '-password')
+      .populate('company', '')
+      .lean(true);
   }
 }

@@ -3,16 +3,16 @@ import { HydratedDocument, Types } from 'mongoose';
 
 export type UserCompanyDocument = HydratedDocument<UserCompany>;
 
-@Schema()
+@Schema({ timestamps: true })
 export class UserCompany {
   @Prop({ type: Types.ObjectId, ref: 'User' })
-  userId: Types.ObjectId;
+  user: Types.ObjectId;
 
   @Prop({ type: Types.ObjectId, ref: 'Company' })
-  companyId: Types.ObjectId;
+  company: Types.ObjectId;
 
-  @Prop()
-  role: string;
+  @Prop({ type: Types.ObjectId, ref: 'Position' })
+  position: Types.ObjectId;
 }
 
 export const UserCompanySchema = SchemaFactory.createForClass(UserCompany);

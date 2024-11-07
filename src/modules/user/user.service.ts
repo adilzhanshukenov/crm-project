@@ -14,8 +14,8 @@ export class UserService {
    * @param {createUserDto} CreateUsersDto - схема создания
    */
   async createUser(createUsersDto: CreateUserDto): Promise<User> {
-    const createdUsers = new this.userModel(createUsersDto);
-    return createdUsers.save();
+    const createdUser = new this.userModel(createUsersDto);
+    return await createdUser.save();
   }
 
   /**
@@ -55,6 +55,19 @@ export class UserService {
     );
     //console.log({ result });
     return result;
+  }
+
+  /**
+   *
+   * @param {username} string
+   * @returns {{boolean}}
+   */
+  async doesUserExist(username: string): Promise<boolean> {
+    const user = await this.userModel.findOne({ username }, '_id', {
+      lean: true,
+    });
+    //const exists = await this.userModel.exists({username})
+    return !!user;
   }
 
   /**

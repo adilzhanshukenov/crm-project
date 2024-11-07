@@ -2,30 +2,31 @@ import { ApiProperty } from '@nestjs/swagger';
 import { IsNotEmpty, IsString } from 'class-validator';
 import { Types } from 'mongoose';
 
-export class CreateUserCompanyDto {
+export class CreatePositionDto {
   @IsString()
   @IsNotEmpty()
   @ApiProperty({
     type: 'string',
-    example: 'Ivan',
-    description: 'Username',
+    example: 'Developer',
+    description: 'Name of the position',
   })
-  readonly user: Types.ObjectId;
+  readonly name: string;
 
   @IsString()
   @IsNotEmpty()
   @ApiProperty({
     type: 'string',
-    example: 'Ivan',
-    description: 'Username',
+    example: 'Tester',
+    description: 'Description of the position',
+  })
+  readonly description: string;
+
+  @IsString()
+  @IsNotEmpty()
+  @ApiProperty({
+    type: 'string',
+    example: '123',
+    description: 'ID of a company',
   })
   readonly company: Types.ObjectId;
-
-  @IsString()
-  @ApiProperty({
-    type: 'string',
-    example: 'Manager',
-    description: 'Company role of the user',
-  })
-  readonly position: Types.ObjectId;
 }

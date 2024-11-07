@@ -11,7 +11,7 @@ export class Position {
   name: string;
 
   @Prop()
-  desctiption: string;
+  description: string;
 
   @Prop({ type: Types.ObjectId, ref: 'Company' })
   company: Types.ObjectId;

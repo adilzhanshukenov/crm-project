@@ -7,6 +7,7 @@ import {
   Body,
   Param,
   UseGuards,
+  Query,
 } from '@nestjs/common';
 import { ApiBody, ApiOperation, ApiParam, ApiResponse } from '@nestjs/swagger';
 import { UserService } from './user.service';
@@ -39,7 +40,16 @@ export class UserController {
     description: 'All users are shown',
   })
   async geAllUsers() {
-    return this.userService.geAllUsers();
+    return await this.userService.geAllUsers();
+  }
+
+  @Get('exists')
+  @ApiOperation({ summary: 'Does user exist?' })
+  async doesUserExist(@Query('username') username: string) {
+    console.log('doesUserExist: ', username);
+    const userExists = await this.userService.doesUserExist(username);
+    console.log({ userExists });
+    return { exists: userExists };
   }
 
   @Get(':id')
@@ -55,10 +65,11 @@ export class UserController {
     description: 'The user was found',
   })
   async findUserById(@Param('id') userId: string) {
+    console.log('findUserById: ', userId);
     return this.userService.getUser(userId);
   }
 
-  @Get('byUsername/:username')
+  @Get('byusername/:username')
   @ApiOperation({ summary: 'Find User By Username' })
   @ApiParam({
     name: 'username', // Name of the parameter
