@@ -11,6 +11,8 @@ import { ProjectModule } from './modules/project/project.module';
 import { UserCompanyModule } from './modules/user-company/user-company.module';
 import { PositionModule } from './modules/position/position.module';
 import { StageModule } from './modules/stage/stage.module';
+import { ProjectRoleController } from './modules/projectrole/controllers/projectRole.controller';
+import { UserProjectModule } from './modules/user-project/user-project.module';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -29,10 +31,11 @@ import { StageModule } from './modules/stage/stage.module';
     ProjectModule,
     UserCompanyModule,
     PositionModule,
+    UserProjectModule,
     StageModule,
     AuthModule,
   ],
-  controllers: [AppController],
+  controllers: [AppController, ProjectRoleController],
   providers: [AppService],
 })
 export class AppModule {}

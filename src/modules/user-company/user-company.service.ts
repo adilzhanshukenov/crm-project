@@ -29,8 +29,8 @@ export class UserCompanyService {
   async getAllUsersOfCompany(company: string): Promise<UserCompany[]> {
     return await this.userCompanyModel
       .find({ company }, '-_id user company role')
-      .populate('user', '-password')
-      .populate('company', '')
+      .populate('user', '-password -createdAt -updatedAt')
+      .populate('company', '-createdAt -updatedAt')
       .lean(true);
   }
 }

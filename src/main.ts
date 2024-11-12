@@ -38,7 +38,7 @@ async function bootstrap() {
 
   app.enableCors(corsOptions); // Enable CORS with specific options
   createSwagger(app);
-  app.useGlobalPipes(new ValidationPipe());
+  app.useGlobalPipes(new ValidationPipe({ transform: true }));
   await app.listen(process.env.PORT);
   console.log(`App started at the port #${process.env.PORT}`);
 }

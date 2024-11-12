@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { UserProject, UserProjectDocument } from './userProject.schema';
 import { Model } from 'mongoose';
@@ -15,8 +15,11 @@ export class UserProjectService {
    * Get all users of project
    * @returns {{ user: string, project: string, position: string, role: string, assigned_at: Date}} - данные пользователя
    */
-  async getAllUsersOfProject(): Promise<UserProject[]> {
-    return this.userProjectModel.find({}, '', { lean: true });
+  async getAllUsersOfProject(projectId: string): Promise<UserProject[]> {
+    return this.userProjectModel
+      .find({ project: projectId })
+      .populate('user', '-password -createdAt -updatedAt')
+      .lean(true);
   }
 
   /**
@@ -27,5 +30,16 @@ export class UserProjectService {
   async addUserToProject(createUserProjectDto: CreateUserProjectDto) {
     const addedUser = new this.userProjectModel(createUserProjectDto);
     await addedUser.save();
+  }
+
+  /**
+   *
+   * @param userId
+   */
+  async deleteUserFromProject(userId: string) {
+    const deletedUser = await this.userProjectModel.deleteOne({ user: userId });
+    if (!deletedUser.deletedCount) {
+      throw new NotFoundException(`User #${userId} not found`);
+    }
   }
 }

@@ -20,7 +20,7 @@ export class ProjectController {
     await this.projectService.createProject(createProjectDto);
   }
 
-  @Get(':projectId')
+  @Get(':id')
   @ApiOperation({ summary: 'Get project by id' })
   @ApiParam({
     name: 'id',
@@ -32,7 +32,7 @@ export class ProjectController {
     status: 200,
     description: 'Project was found.',
   })
-  async getProjectById(@Param('projectId') projectId: string) {
+  async getProjectById(@Param('id') projectId: string) {
     return this.projectService.getProjectById(projectId);
   }
 

@@ -11,11 +11,11 @@ export class Project {
   @Prop()
   description: string;
 
-  //   @Prop({ required: true })
-  //   start_date: Date;
+  @Prop({ required: true })
+  start_date: Date;
 
-  //   @Prop()
-  //   end_date: Date;
+  @Prop()
+  end_date: Date;
 
   @Prop({
     enum: ['Active', 'On-Hold', 'Completed'],

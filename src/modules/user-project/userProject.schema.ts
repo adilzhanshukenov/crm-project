@@ -1,5 +1,6 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { HydratedDocument, Types } from 'mongoose';
+import { ProjectRole } from '../projectrole/enums/ProjectRole.enum';
 
 export type UserProjectDocument = HydratedDocument<UserProject>;
 
@@ -14,10 +15,10 @@ export class UserProject {
   @Prop({ type: Types.ObjectId, ref: 'Position' }) //добавить схему
   position?: Types.ObjectId;
 
-  @Prop({ enum: ['Admin', 'Manager', 'Worker'], default: 'Worker' })
+  @Prop({ type: String, enum: ProjectRole, default: ProjectRole.WORKER })
   role: string;
 
-  @Prop({ default: Date.now() })
+  @Prop({ type: Date, default: Date.now })
   assigned_at: Date;
 }
 

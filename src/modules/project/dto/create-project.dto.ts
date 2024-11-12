@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsDate, IsNotEmpty, IsString } from 'class-validator';
+import { IsDateString, IsNotEmpty, IsString } from 'class-validator';
 
 export class CreateProjectDto {
   @IsString()
@@ -19,20 +19,20 @@ export class CreateProjectDto {
   })
   readonly description: string;
 
-  @IsDate()
-  //@IsNotEmpty()
+  @IsDateString()
+  @IsNotEmpty()
   @ApiProperty({
-    //type: 'Date',
+    type: 'datestring',
     description: 'Start date of the project',
   })
-  readonly start_date: Date;
+  readonly start_date: string;
 
-  @IsDate()
+  @IsDateString()
   @ApiProperty({
-    //type: 'Date',
+    type: 'datestring',
     description: 'End date of the project',
   })
-  readonly end_date: Date;
+  readonly end_date: string;
 
   @IsString()
   @ApiProperty({

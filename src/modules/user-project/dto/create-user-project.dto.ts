@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty, IsString } from 'class-validator';
+import { IsDateString, IsNotEmpty, IsString } from 'class-validator';
 import { Types } from 'mongoose';
 
 export class CreateUserProjectDto {
@@ -38,12 +38,12 @@ export class CreateUserProjectDto {
   })
   readonly role: string;
 
-  @IsString()
+  @IsDateString()
   @IsNotEmpty()
   @ApiProperty({
-    type: 'string',
+    type: 'Date',
     example: '1234',
     description: 'Date when user assigned to project',
   })
-  readonly assigned_at: Date;
+  readonly assigned_at: string;
 }
