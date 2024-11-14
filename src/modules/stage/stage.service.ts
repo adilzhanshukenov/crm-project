@@ -31,12 +31,28 @@ export class StageService {
     return await createdStage.save();
   }
 
+  /**
+   *
+   * @param stageId
+   * @param updateStageDto
+   */
   async updateStage(stageId: string, updateStageDto: UpdateStageDto) {
     const updatedStage = await this.stageModel.updateOne(
       { _id: stageId },
       updateStageDto,
     );
     if (!updatedStage.matchedCount && !updatedStage.modifiedCount) {
+      throw new NotFoundException(`Stage #${stageId} was not found`);
+    }
+  }
+
+  /**
+   *
+   * @param stageId
+   */
+  async deleteStage(stageId: string) {
+    const deletedStage = await this.stageModel.deleteOne({ _id: stageId });
+    if (!deletedStage.deletedCount) {
       throw new NotFoundException(`Stage #${stageId} was not found`);
     }
   }

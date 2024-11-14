@@ -1,10 +1,12 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsDateString, IsNotEmpty, IsString } from 'class-validator';
+import { Types } from 'mongoose';
 
 export class CreateProjectDto {
   @IsString()
   @IsNotEmpty()
   @ApiProperty({
+    name: 'name',
     type: 'string',
     example: 'CRM project',
     description: 'Project Name',
@@ -13,6 +15,7 @@ export class CreateProjectDto {
 
   @IsString()
   @ApiProperty({
+    name: 'decription',
     type: 'string',
     example: 'CRM project to track progres of employees',
     description: 'Description of the project',
@@ -22,21 +25,24 @@ export class CreateProjectDto {
   @IsDateString()
   @IsNotEmpty()
   @ApiProperty({
-    type: 'datestring',
+    name: 'start_date',
+    type: 'Date',
     description: 'Start date of the project',
   })
   readonly start_date: string;
 
   @IsDateString()
   @ApiProperty({
-    type: 'datestring',
+    name: 'end_date',
+    type: 'Date',
     description: 'End date of the project',
   })
   readonly end_date: string;
 
   @IsString()
   @ApiProperty({
-    type: 'date',
+    name: 'status',
+    type: 'string',
     example: 'Active',
     description: 'Status of the project',
   })
@@ -44,8 +50,10 @@ export class CreateProjectDto {
 
   @IsString()
   @ApiProperty({
+    name: 'company',
     type: 'string',
+    example: '123',
     description: 'Company of the project',
   })
-  readonly company: string;
+  readonly company: Types.ObjectId;
 }

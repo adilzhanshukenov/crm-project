@@ -1,5 +1,5 @@
 import { Controller, Get } from '@nestjs/common';
-import { ProjectRole } from '../enums/ProjectRole.enum';
+import { ProjectRole } from '../enum/ProjectRole.enum';
 
 @Controller('projectrole')
 export class ProjectRoleController {

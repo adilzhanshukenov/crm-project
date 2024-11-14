@@ -18,8 +18,8 @@ export class Project {
   end_date: Date;
 
   @Prop({
-    enum: ['Active', 'On-Hold', 'Completed'],
-    default: 'Active',
+    enum: ['ACTIVE', 'ON_HOLD', 'COMPLETED'],
+    default: 'ACTIVE',
   })
   status: string;
 

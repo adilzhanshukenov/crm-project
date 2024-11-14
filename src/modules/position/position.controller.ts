@@ -1,4 +1,12 @@
-import { Body, Controller, Get, Param, Post, Put } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Post,
+  Put,
+} from '@nestjs/common';
 import { ApiBody, ApiOperation, ApiParam, ApiResponse } from '@nestjs/swagger';
 import { PositionService } from './position.service';
 import { CreatePositionDto } from './dto/create-position.dto';
@@ -58,5 +66,21 @@ export class PositionController {
     @Body() updatePositionDto: UpdatePositionDto,
   ) {
     await this.positionService.updatePosition(positionId, updatePositionDto);
+  }
+
+  @Delete(':id')
+  @ApiOperation({ summary: 'Delete position' })
+  @ApiParam({
+    name: 'positionId',
+    type: 'string',
+    example: '123',
+    description: 'Delete position from company',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'The position was successfully deleted',
+  })
+  async deletePosition(@Param('id') positionId: string) {
+    await this.positionService.deletePosition(positionId);
   }
 }

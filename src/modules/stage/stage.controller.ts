@@ -1,4 +1,12 @@
-import { Body, Controller, Get, Param, Post, Put } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Post,
+  Put,
+} from '@nestjs/common';
 import { StageService } from './stage.service';
 import { ApiBody, ApiOperation, ApiParam, ApiResponse } from '@nestjs/swagger';
 import { CreateStageDto } from './dto/create-stage.dto';
@@ -15,7 +23,7 @@ export class StageController {
   })
   @ApiResponse({
     status: 201,
-    description: 'The stage was succesfully added',
+    description: 'The stage was successfully added',
   })
   async addStageToCompany(@Body() createStageDto: CreateStageDto) {
     await this.stageService.addStageToCompany(createStageDto);
@@ -30,7 +38,7 @@ export class StageController {
     example: '123', // Example for Swagger
   })
   @ApiResponse({
-    status: 201,
+    status: 200,
     description: 'All stages of company are shown',
   })
   async getAllStageOfCompany(@Param('companyId') company: string) {
@@ -50,7 +58,7 @@ export class StageController {
   })
   @ApiResponse({
     status: 200,
-    description: 'The stage was succesfully updated',
+    description: 'The stage was successfully updated',
   })
   @ApiResponse({
     status: 404,
@@ -61,5 +69,21 @@ export class StageController {
     @Body() updateStageDto: UpdateStageDto,
   ) {
     await this.stageService.updateStage(stageId, updateStageDto);
+  }
+
+  @Delete(':id')
+  @ApiOperation({ summary: 'Delete stage from company' })
+  @ApiParam({
+    name: 'stageId',
+    type: 'string',
+    example: '123',
+    description: 'ID of the stage',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'The stage was successfully deleted',
+  })
+  async deleteStage(@Param('id') stageId: string) {
+    await this.stageService.deleteStage(stageId);
   }
 }

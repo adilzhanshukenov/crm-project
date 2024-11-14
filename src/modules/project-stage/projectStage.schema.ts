@@ -11,7 +11,7 @@ export class ProjectStage {
   @Prop({ type: Types.ObjectId, ref: 'Stage' })
   stage: Types.ObjectId;
 
-  @Prop()
+  @Prop({ type: 'number', default: 1 })
   order: number;
 }
 

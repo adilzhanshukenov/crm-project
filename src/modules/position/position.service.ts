@@ -48,4 +48,13 @@ export class PositionService {
       throw new NotFoundException(`Position #${positionId} not found`);
     }
   }
+
+  async deletePosition(positionId: string) {
+    const deletedPosition = await this.positionModel.deleteOne({
+      _id: positionId,
+    });
+    if (!deletedPosition.deletedCount) {
+      throw new NotFoundException(`Position #${positionId} was not found`);
+    }
+  }
 }
