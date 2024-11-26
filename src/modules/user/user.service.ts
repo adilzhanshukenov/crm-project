@@ -53,7 +53,6 @@ export class UserService {
         lean: true,
       },
     );
-    //console.log({ result });
     return result;
   }
 

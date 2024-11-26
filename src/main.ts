@@ -1,9 +1,10 @@
 import { ValidationPipe } from '@nestjs/common';
-import { NestFactory } from '@nestjs/core';
+import { NestFactory, Reflector } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { INestApplication } from '@nestjs/common';
 import { CorsOptions } from '@nestjs/common/interfaces/external/cors-options.interface';
+import { JwtAuthGuard } from './guards/jwt.guard';
 
 function createSwagger(app: INestApplication) {
   const SWAGGER_TITLE = 'App API';
@@ -29,6 +30,7 @@ function createSwagger(app: INestApplication) {
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+  const reflector = app.get(Reflector);
   // CORS options: allow requests from http://localhost:5173
   const corsOptions: CorsOptions = {
     origin: 'http://localhost:5173', // Allow requests from your React app
@@ -39,6 +41,7 @@ async function bootstrap() {
   app.enableCors(corsOptions); // Enable CORS with specific options
   createSwagger(app);
   app.useGlobalPipes(new ValidationPipe({ transform: true }));
+  app.useGlobalGuards(new JwtAuthGuard(reflector));
   await app.listen(process.env.PORT);
   console.log(`App started at the port #${process.env.PORT}`);
 }

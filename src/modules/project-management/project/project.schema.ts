@@ -1,0 +1,31 @@
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { HydratedDocument, Types } from 'mongoose';
+import { ProjectStatus } from '../enums/project-status/project-status.enum';
+
+export type ProjectDocument = HydratedDocument<Project>;
+
+@Schema({ timestamps: true })
+export class Project {
+  @Prop({ required: true })
+  name: string;
+
+  @Prop()
+  description: string;
+
+  @Prop({ required: true })
+  start_date: Date;
+
+  @Prop()
+  end_date: Date;
+
+  @Prop({
+    enum: ProjectStatus,
+    default: ProjectStatus.ACTIVE,
+  })
+  status: string;
+
+  @Prop({ type: Types.ObjectId, ref: 'Company', required: false, index: true })
+  company?: Types.ObjectId;
+}
+
+export const ProjectSchema = SchemaFactory.createForClass(Project);

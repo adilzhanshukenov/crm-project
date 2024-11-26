@@ -6,14 +6,12 @@ import {
   Delete,
   Body,
   Param,
-  UseGuards,
   Query,
 } from '@nestjs/common';
 import { ApiBody, ApiOperation, ApiParam, ApiResponse } from '@nestjs/swagger';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { PassportJwtAuthGuard } from '../../guards/passport-jwt.guard';
 
 @Controller('user')
 export class UserController {
@@ -32,8 +30,9 @@ export class UserController {
     await this.userService.createUser(createUsersDto);
   }
 
-  @UseGuards(PassportJwtAuthGuard)
+  //@UseGuards(RolesGuard)
   @Get()
+  //@Roles(Role.ADMIN)
   @ApiOperation({ summary: 'Get All Users' })
   @ApiResponse({
     status: 201,
@@ -46,9 +45,7 @@ export class UserController {
   @Get('exists')
   @ApiOperation({ summary: 'Does user exist?' })
   async doesUserExist(@Query('username') username: string) {
-    console.log('doesUserExist: ', username);
     const userExists = await this.userService.doesUserExist(username);
-    console.log({ userExists });
     return { exists: userExists };
   }
 
@@ -65,7 +62,6 @@ export class UserController {
     description: 'The user was found',
   })
   async findUserById(@Param('id') userId: string) {
-    console.log('findUserById: ', userId);
     return this.userService.getUser(userId);
   }
 
