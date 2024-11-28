@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Patch, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post } from '@nestjs/common';
 import { TaskService } from './task.service';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { ApiBody, ApiOperation, ApiParam, ApiResponse } from '@nestjs/swagger';
@@ -29,13 +29,5 @@ export class TaskController {
   })
   async fetchAllTasks(@Param('projectId') projectId: string) {
     return await this.taskService.fetchAllTasks(projectId);
-  }
-
-  @Patch(':taskId/stage')
-  async moveTask(
-    @Param('taskId') taskId: string,
-    @Body() body: { stage: string },
-  ) {
-    return this.taskService.moveTask(taskId, body.stage);
   }
 }

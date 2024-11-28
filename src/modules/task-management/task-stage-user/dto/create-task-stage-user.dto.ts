@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty, IsString } from 'class-validator';
+import { IsNotEmpty, IsOptional, IsString } from 'class-validator';
 import { Types } from 'mongoose';
 
 export class CreateTaskStageUserDto {
@@ -21,12 +21,14 @@ export class CreateTaskStageUserDto {
     description: 'Stage ID',
   })
   readonly stage: Types.ObjectId;
+
   @IsString()
+  @IsOptional()
   @ApiProperty({
     name: 'user',
     type: 'string',
     example: '123',
     description: 'User ID',
   })
-  readonly user: Types.ObjectId;
+  readonly user?: Types.ObjectId;
 }
