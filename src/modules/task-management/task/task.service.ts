@@ -35,6 +35,10 @@ export class TaskService {
       .lean(true);
   }
 
+  async deleteTask(taskId: string) {
+    this.taskModel.deleteOne({ task: taskId });
+  }
+
   async moveTask(taskId: string, stageId: string) {
     return this.taskModel.findOneAndUpdate(
       { _id: taskId },

@@ -3,7 +3,7 @@ import { UserProjectService } from './project-user.service';
 import { ApiBody, ApiOperation, ApiParam, ApiResponse } from '@nestjs/swagger';
 import { CreateUserProjectDto } from './dto/create-user-project.dto';
 
-@Controller('user-project')
+@Controller('project-user')
 export class UserProjectController {
   constructor(private readonly userProjectService: UserProjectService) {}
 

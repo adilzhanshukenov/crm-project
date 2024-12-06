@@ -5,6 +5,7 @@ import { Model } from 'mongoose';
 import { CreateTaskStageUserDto } from './dto/create-task-stage-user.dto';
 import { UpdateTaskStageUserDto } from './dto/update-task-stage-user.dto';
 import { Task, TaskDocument } from '../task/task.schema';
+import { AssignUserToTaskDto } from './dto/assign-user-to-task.dto';
 
 @Injectable()
 export class TaskStageUserService {
@@ -15,6 +16,11 @@ export class TaskStageUserService {
     private readonly taskModel: Model<TaskDocument>,
   ) {}
 
+  /**
+   *
+   * @param createTaskStageUserDto
+   * @returns
+   */
   async createTaskInStage(
     createTaskStageUserDto: CreateTaskStageUserDto,
   ): Promise<TaskStageUser> {
@@ -22,15 +28,24 @@ export class TaskStageUserService {
     return createdTask.save();
   }
 
-  async getTaskStageUsersByProjectId(
-    projectId: string,
-  ): Promise<TaskStageUser[]> {
-    return this.taskStageUserModel
-      .find({ projectId })
+  /**
+   *
+   * @param projectId
+   * @returns
+   */
+  async getUserByTask(taskId: string): Promise<TaskStageUser> {
+    return await this.taskStageUserModel
+      .findOne({ task: taskId }, 'user')
       .populate('user')
       .lean(true);
   }
 
+  /**
+   *
+   * @param taskId
+   * @param updateTaskStageUserDto
+   * @returns
+   */
   async updateTaskStageUser(
     taskId: string,
     updateTaskStageUserDto: UpdateTaskStageUserDto,
@@ -63,9 +78,36 @@ export class TaskStageUserService {
     return await taskStageUser.save();
   }
 
+  /**
+   *
+   * @param stageId
+   * @returns
+   */
   async getAllTasksInStage(stageId: string): Promise<TaskStageUser[]> {
     return await this.taskStageUserModel.find({ stage: stageId }, '', {
       lean: true,
     });
+  }
+
+  /**
+   *
+   * @param assignUserToTask
+   * @returns
+   */
+  async assignUserToTask(
+    assignUserToTask: AssignUserToTaskDto,
+  ): Promise<TaskStageUser> {
+    const { task, user } = assignUserToTask;
+
+    const taskStageUser = await this.taskStageUserModel.findOne({ task });
+    if (!taskStageUser) {
+      throw new NotFoundException(`TaskStageUser with ID #${task} not found`);
+    }
+    taskStageUser.user = user;
+    return taskStageUser.save();
+  }
+
+  async fetchTaskStageUsers(taskId: string): Promise<TaskStageUser[]> {
+    return this.taskStageUserModel.find({ task: taskId }, '', { lean: true });
   }
 }

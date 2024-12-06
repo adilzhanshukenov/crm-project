@@ -12,7 +12,6 @@ import { UserCompanyModule } from './modules/company-management/company-user/com
 import { PositionModule } from './modules/company-management/position/position.module';
 import { StageModule } from './modules/project-management/stage/stage.module';
 import { UserProjectModule } from './modules/project-management/project-user/project-user.module';
-import { ProjectStatusController } from './modules/project-management/enums/project-status/project-status.controller';
 import { ProjectStageModule } from './modules/project-management/project-stage/project-stage.module';
 import { TaskModule } from './modules/task-management/task/task.module';
 import { ProjectRoleController } from './modules/project-management/enums/project-role/project-role.controller';
@@ -48,7 +47,6 @@ import { TaskStageUserModule } from './modules/task-management/task-stage-user/t
   controllers: [
     AppController,
     ProjectRoleController,
-    ProjectStatusController,
     TaskPriorityController,
     TaskStatusController,
   ],

@@ -1,6 +1,5 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { HydratedDocument, Types } from 'mongoose';
-import { ProjectStatus } from '../enums/project-status/project-status.enum';
 
 export type ProjectDocument = HydratedDocument<Project>;
 
@@ -17,12 +16,6 @@ export class Project {
 
   @Prop()
   end_date: Date;
-
-  @Prop({
-    enum: ProjectStatus,
-    default: ProjectStatus.ACTIVE,
-  })
-  status: string;
 
   @Prop({ type: Types.ObjectId, ref: 'Company', required: false, index: true })
   company?: Types.ObjectId;
