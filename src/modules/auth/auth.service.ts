@@ -30,7 +30,7 @@ export class AuthService {
   ) {}
 
   async register(registerUserDto: CreateUserDto): Promise<User> {
-    const { username, password, email } = registerUserDto;
+    const { username, password, email, name, surname } = registerUserDto;
 
     // Check if the user already exists
     const existingUser = await this.usersModel.findOne({ username });
@@ -47,6 +47,8 @@ export class AuthService {
       username,
       password: hashedPassword,
       email,
+      name,
+      surname,
     });
 
     return newUser.save();

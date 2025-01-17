@@ -11,6 +11,9 @@ export class ProjectStage {
   @Prop({ type: Types.ObjectId, ref: 'Stage' })
   stage: Types.ObjectId;
 
+  @Prop({ type: Types.ObjectId, ref: 'User' })
+  default_user?: Types.ObjectId;
+
   @Prop({ type: Number, default: 0 })
   order: number;
 }

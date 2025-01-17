@@ -21,7 +21,7 @@ export class RolesGuard implements CanActivate {
       context.getClass(),
     ]);
 
-    //console.log(requiredRole);
+    // console.log('RequiredRole: ', requiredRole);
 
     if (!requiredRole) {
       return true; // No roles required, allow access
@@ -38,9 +38,9 @@ export class RolesGuard implements CanActivate {
     const projectId =
       request.params.projectId || // From route params
       request.query.projectId || // From query string
-      request.body.projectId; // From request body
-    // console.log(user);
-    // console.log(projectId);
+      request.body.project; // From request body
+    // console.log('User: ', user);
+    // console.log('Project: ', projectId);
 
     if (!user || !projectId) {
       throw new ForbiddenException('User or project information is missing.');
@@ -51,7 +51,7 @@ export class RolesGuard implements CanActivate {
       projectId,
     );
 
-    //console.log(userProject.role);
+    // console.log('UserProject Role: ', userProject.role);
 
     if (!userProject) {
       throw new ForbiddenException('You are not part of this project.');

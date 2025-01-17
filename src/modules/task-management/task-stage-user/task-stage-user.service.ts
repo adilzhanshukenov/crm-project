@@ -5,7 +5,6 @@ import { Model } from 'mongoose';
 import { CreateTaskStageUserDto } from './dto/create-task-stage-user.dto';
 import { UpdateTaskStageUserDto } from './dto/update-task-stage-user.dto';
 import { Task, TaskDocument } from '../task/task.schema';
-import { AssignUserToTaskDto } from './dto/assign-user-to-task.dto';
 
 @Injectable()
 export class TaskStageUserService {
@@ -15,6 +14,17 @@ export class TaskStageUserService {
     @InjectModel(Task.name)
     private readonly taskModel: Model<TaskDocument>,
   ) {}
+
+  /**
+   *
+   * @returns
+   */
+  async fetchAllTaskStageUsers() {
+    return await this.taskStageUserModel
+      .find({}, 'task user')
+      .populate('user')
+      .lean(true);
+  }
 
   /**
    *
@@ -50,7 +60,7 @@ export class TaskStageUserService {
     taskId: string,
     updateTaskStageUserDto: UpdateTaskStageUserDto,
   ): Promise<TaskStageUser> {
-    const { stageId, userId } = updateTaskStageUserDto;
+    const { stage, user } = updateTaskStageUserDto;
 
     const task = await this.taskModel.findOne({ _id: taskId });
 
@@ -68,12 +78,12 @@ export class TaskStageUserService {
       );
     }
 
-    task.stage = stageId;
+    task.stage = stage;
     await task.save();
 
-    taskStageUser.stage = stageId;
-    if (userId) {
-      taskStageUser.user = userId;
+    taskStageUser.stage = stage;
+    if (user) {
+      taskStageUser.user = user;
     }
     return await taskStageUser.save();
   }
@@ -94,17 +104,19 @@ export class TaskStageUserService {
    * @param assignUserToTask
    * @returns
    */
-  async assignUserToTask(
-    assignUserToTask: AssignUserToTaskDto,
-  ): Promise<TaskStageUser> {
-    const { task, user } = assignUserToTask;
+  async assignUserToTask(updateTaskStageUserDto: UpdateTaskStageUserDto) {
+    const { task, user } = updateTaskStageUserDto;
 
-    const taskStageUser = await this.taskStageUserModel.findOne({ task });
+    console.log('User: ', user);
+
+    let taskStageUser = await this.taskStageUserModel.findOne({ task });
+    console.log('taskStageUser', taskStageUser);
     if (!taskStageUser) {
-      throw new NotFoundException(`TaskStageUser with ID #${task} not found`);
+      taskStageUser = new this.taskStageUserModel(updateTaskStageUserDto);
     }
     taskStageUser.user = user;
-    return taskStageUser.save();
+    console.log('UpdatedTaskStageUser: ', taskStageUser);
+    await taskStageUser.save();
   }
 
   async fetchTaskStageUsers(taskId: string): Promise<TaskStageUser[]> {

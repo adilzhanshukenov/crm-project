@@ -3,12 +3,15 @@ import { InjectModel } from '@nestjs/mongoose';
 import { ProjectStage, ProjectStageDocument } from './project-stage.schema';
 import { Model } from 'mongoose';
 import { CreateProjectStageDto } from './dto/create-project-stage.dto';
+import { Stage, StageDocument } from '../stage/stage.schema';
 
 @Injectable()
 export class ProjectStageService {
   constructor(
     @InjectModel(ProjectStage.name)
     private projectStageModel: Model<ProjectStageDocument>,
+    @InjectModel(Stage.name)
+    private stageModel: Model<StageDocument>,
   ) {}
 
   /**
@@ -17,8 +20,26 @@ export class ProjectStageService {
    * @returns
    */
   async addStageToProject(createProjectStageDto: CreateProjectStageDto) {
-    const addedStage = new this.projectStageModel(createProjectStageDto);
-    await addedStage.save();
+    // Find the "Done" stage and increment its order
+
+    const stageFound: Stage = await this.stageModel.findOne({ name: 'Done' });
+
+    const doneProjectStage = await this.projectStageModel.findOne({
+      project: createProjectStageDto.project,
+      stage: stageFound._id.toString(),
+    });
+
+    doneProjectStage.order += 1;
+    await doneProjectStage.save();
+
+    // Insert the new stage before "Done"
+    const newProjectStage = new this.projectStageModel({
+      project: createProjectStageDto.project,
+      stage: createProjectStageDto.stage,
+      default_user: createProjectStageDto.default_user,
+      order: doneProjectStage.order - 1,
+    });
+    await newProjectStage.save();
   }
 
   /**
@@ -29,8 +50,7 @@ export class ProjectStageService {
   async getAllStagesOfProject(projectId: string) {
     return this.projectStageModel
       .find({ project: projectId })
-      .populate('project')
-      .populate('stage')
+      .populate('project stage default_user')
       .lean(true);
   }
 

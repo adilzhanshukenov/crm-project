@@ -11,6 +11,11 @@ import {
   TaskStageUser,
   TaskStageUserSchema,
 } from '../task-stage-user/task-stage-user.schema';
+import { UserProjectService } from '../../project-management/project-user/project-user.service';
+import {
+  UserProject,
+  UserProjectSchema,
+} from '../../project-management/project-user/project-user.schema';
 
 @Module({
   imports: [
@@ -18,9 +23,10 @@ import {
       { name: Task.name, schema: TaskSchema },
       { name: ProjectStage.name, schema: ProjectStageSchema },
       { name: TaskStageUser.name, schema: TaskStageUserSchema },
+      { name: UserProject.name, schema: UserProjectSchema },
     ]),
   ],
-  providers: [TaskService],
+  providers: [TaskService, UserProjectService],
   controllers: [TaskController],
 })
 export class TaskModule {}

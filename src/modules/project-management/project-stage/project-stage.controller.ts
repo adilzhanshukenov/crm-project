@@ -1,13 +1,25 @@
-import { Body, Controller, Delete, Get, Param, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Post,
+  UseGuards,
+} from '@nestjs/common';
 import { ProjectStageService } from './project-stage.service';
 import { CreateProjectStageDto } from './dto/create-project-stage.dto';
 import { ApiBody, ApiOperation, ApiParam, ApiResponse } from '@nestjs/swagger';
+import { RolesGuard } from '../../../guards/roles.guard';
+import { Role } from '../../auth/decorators/role.decorator';
+import { ProjectRole } from '../enums/project-role/project-role.enum';
 
+@UseGuards(RolesGuard)
 @Controller('project-stage')
 export class ProjectStageController {
   constructor(private readonly projectStageService: ProjectStageService) {}
 
-  //@Role(ProjectRole.OWNER)
+  @Role(ProjectRole.OWNER)
   @Post()
   @ApiOperation({ summary: 'Add stage to project' })
   @ApiBody({

@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   Body,
   Controller,
   Delete,
@@ -26,7 +27,11 @@ export class PositionController {
     description: 'The position was succesfully added',
   })
   async addPosition(@Body() createPositionDto: CreatePositionDto) {
-    await this.positionService.addPosition(createPositionDto);
+    try {
+      await this.positionService.addPosition(createPositionDto);
+    } catch (error) {
+      throw new BadRequestException(error.message);
+    }
   }
 
   @Get(':companyId')

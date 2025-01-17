@@ -11,6 +11,7 @@ import {
   TaskStageUser,
   TaskStageUserDocument,
 } from '../task-stage-user/task-stage-user.schema';
+import { UpdateTaskDto } from './dto/update-task.dto';
 
 @Injectable()
 export class TaskService {
@@ -31,20 +32,16 @@ export class TaskService {
   async fetchAllTasks(projectId: string): Promise<Task[]> {
     return await this.taskModel
       .find({ project: projectId })
+      .where('status')
+      .ne('Archived')
+      .sort({ createdAt: -1 })
       .populate('stage')
       .lean(true);
   }
 
   async deleteTask(taskId: string) {
     this.taskModel.deleteOne({ task: taskId });
-  }
-
-  async moveTask(taskId: string, stageId: string) {
-    return this.taskModel.findOneAndUpdate(
-      { _id: taskId },
-      { stage: stageId },
-      { new: true },
-    );
+    this.taskStageUserModel.deleteMany({ task: taskId });
   }
 
   /**
@@ -82,5 +79,17 @@ export class TaskService {
     await taskStageUser.save();
 
     return task;
+  }
+
+  /**
+   *
+   * @param taskId
+   * @param updateTaskDto
+   */
+  async archiveTask(taskId: string, updateTaskDto: UpdateTaskDto) {
+    await this.taskModel.findOneAndUpdate(
+      { _id: taskId },
+      { status: updateTaskDto.status },
+    );
   }
 }

@@ -30,9 +30,7 @@ export class UserController {
     await this.userService.createUser(createUsersDto);
   }
 
-  //@UseGuards(RolesGuard)
   @Get()
-  //@Roles(Role.ADMIN)
   @ApiOperation({ summary: 'Get All Users' })
   @ApiResponse({
     status: 201,

@@ -3,7 +3,6 @@ import { TaskStageUserService } from './task-stage-user.service';
 import { ApiBody, ApiOperation, ApiParam } from '@nestjs/swagger';
 import { CreateTaskStageUserDto } from './dto/create-task-stage-user.dto';
 import { UpdateTaskStageUserDto } from './dto/update-task-stage-user.dto';
-import { AssignUserToTaskDto } from './dto/assign-user-to-task.dto';
 
 @Controller('task-stage-user')
 export class TaskStageUserController {
@@ -22,6 +21,11 @@ export class TaskStageUserController {
     );
   }
 
+  @Get()
+  async fetchAllTaskStageUsers() {
+    return await this.taskStageUserService.fetchAllTaskStageUsers();
+  }
+
   @Get(':stageId')
   @ApiOperation({ summary: 'Get All Tasks in Stage' })
   @ApiParam({
@@ -34,7 +38,7 @@ export class TaskStageUserController {
     return await this.taskStageUserService.getAllTasksInStage(stageId);
   }
 
-  @Get('/user/:taskId')
+  @Get(':taskId/user')
   @ApiOperation({ summary: 'Get task stage user' })
   @ApiParam({
     name: 'taskId',
@@ -42,14 +46,16 @@ export class TaskStageUserController {
     example: '123',
     description: 'Stage ID',
   })
-  async getTaskStageUser(@Param('taskId') taskId: string) {
-    return await this.taskStageUserService.getUserByTask(taskId);
+  async getTaskStageUsers(@Param('taskId') taskId: string) {
+    return await this.taskStageUserService.fetchTaskStageUsers(taskId);
   }
 
-  @Patch('assign-user')
+  @Post('/assign-user')
   @ApiOperation({ summary: 'Assign user to a task' })
-  async assignUserToTask(@Body() assignUserToTaskDto: AssignUserToTaskDto) {
-    return this.taskStageUserService.assignUserToTask(assignUserToTaskDto);
+  async assignUserToTask(
+    @Body() updateTaskStageUserDto: UpdateTaskStageUserDto,
+  ) {
+    await this.taskStageUserService.assignUserToTask(updateTaskStageUserDto);
   }
 
   @Patch(':taskId')

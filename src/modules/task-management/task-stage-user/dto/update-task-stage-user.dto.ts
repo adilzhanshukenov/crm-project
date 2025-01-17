@@ -1,12 +1,6 @@
-import { IsNotEmpty, IsOptional, IsString } from 'class-validator';
-import { Types } from 'mongoose';
+import { PartialType } from '@nestjs/mapped-types';
+import { CreateTaskStageUserDto } from './create-task-stage-user.dto';
 
-export class UpdateTaskStageUserDto {
-  @IsString()
-  @IsNotEmpty()
-  stageId: Types.ObjectId;
-
-  @IsString()
-  @IsOptional() // User assignment is optional
-  userId?: Types.ObjectId;
-}
+export class UpdateTaskStageUserDto extends PartialType(
+  CreateTaskStageUserDto,
+) {}

@@ -4,20 +4,35 @@ import { Model } from 'mongoose';
 import { Company, CompanyDocument } from './company.schema';
 import { CreateCompanyDto } from './dto/create-company.dto';
 import { UpdateCompanyDto } from './dto/update-company.dto';
+import { Position, PositionDocument } from '../position/position.schema';
+import {
+  UserCompany,
+  UserCompanyDocument,
+} from '../company-user/company-user.schema';
 
 @Injectable()
 export class CompanyService {
   constructor(
     @InjectModel(Company.name) private companyModel: Model<CompanyDocument>,
+    @InjectModel(Position.name) private positionModel: Model<PositionDocument>,
+    @InjectModel(UserCompany.name)
+    private userCOmpanyMddel: Model<UserCompanyDocument>,
   ) {}
 
   /**
    * Создать компанию
    * @param {createCompanyDto} CreateCompanyDto - схема создания
    */
-  async createCompany(createCompanyDto: CreateCompanyDto): Promise<Company> {
+  async createCompany(createCompanyDto: CreateCompanyDto) {
     const createdCompany = new this.companyModel(createCompanyDto);
-    return createdCompany.save();
+    await createdCompany.save();
+    const ownerPosition = new this.positionModel({
+      name: 'Owner',
+      description: 'Owner of company',
+      company: createdCompany._id.toString(),
+    });
+
+    await ownerPosition.save();
   }
 
   /**

@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Position, PositionDocument } from './position.schema';
@@ -16,9 +20,13 @@ export class PositionService {
    * @returns
    */
   async getPositionsOfCompany(company: string) {
-    return await this.positionModel.find({ company }, 'name description', {
-      lean: true,
-    });
+    return await this.positionModel.find(
+      { company, name: { $ne: 'Owner' } },
+      'name description',
+      {
+        lean: true,
+      },
+    );
   }
 
   /**
@@ -27,6 +35,9 @@ export class PositionService {
    * @returns
    */
   async addPosition(createPositionDto: CreatePositionDto): Promise<Position> {
+    if (createPositionDto.name === 'Owner') {
+      throw new BadRequestException("Position 'Owner' can not be added");
+    }
     const createdPosition = new this.positionModel(createPositionDto);
     return await createdPosition.save();
   }

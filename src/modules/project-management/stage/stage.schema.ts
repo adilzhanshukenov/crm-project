@@ -5,6 +5,8 @@ export type StageDocument = HydratedDocument<Stage>;
 
 @Schema({ timestamps: true })
 export class Stage {
+  _id: Types.ObjectId;
+
   @Prop({ required: true })
   name: string;
 

@@ -29,4 +29,22 @@ export class CreateUserDto {
     description: 'Email',
   })
   readonly email: string;
+
+  @IsString()
+  @IsNotEmpty()
+  @ApiProperty({
+    type: 'string',
+    example: 'John',
+    description: 'Name of the user',
+  })
+  readonly name: string;
+
+  @IsString()
+  @IsNotEmpty()
+  @ApiProperty({
+    type: 'string',
+    example: 'Johnson',
+    description: 'Surname of the user',
+  })
+  readonly surname: string;
 }

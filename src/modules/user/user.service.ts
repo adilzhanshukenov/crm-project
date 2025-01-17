@@ -23,7 +23,9 @@ export class UserService {
    * @returns {{ username: string, email: string}} - данные пользователя
    */
   async geAllUsers(): Promise<User[]> {
-    return await this.userModel.find({}, 'username email', { lean: true });
+    return await this.userModel.find({}, 'username email name surname', {
+      lean: true,
+    });
   }
 
   /**
@@ -34,7 +36,7 @@ export class UserService {
   async getUser(userId: string): Promise<UserDocument> {
     const result = await this.userModel.findOne(
       { _id: userId },
-      '-_id username email',
+      '-_id username email name surname',
       { lean: true },
     );
     return result;
@@ -48,7 +50,7 @@ export class UserService {
   async findUserByName(username: string): Promise<UserDocument> {
     const result = await this.userModel.findOne(
       { username },
-      'username password email',
+      'username password email name surname',
       {
         lean: true,
       },

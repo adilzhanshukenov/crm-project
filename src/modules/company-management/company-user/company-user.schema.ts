@@ -14,7 +14,7 @@ export class UserCompany {
   @Prop({ type: Types.ObjectId, ref: 'Position' })
   position: Types.ObjectId;
 
-  @Prop({ type: Number, default: 0 })
+  @Prop({ type: Number, default: 0, required: false })
   accepted: number;
 }
 

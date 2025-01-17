@@ -23,6 +23,16 @@ export class CreateProjectStageDto {
   })
   stage: Types.ObjectId;
 
+  @IsString()
+  @IsNotEmpty()
+  @ApiProperty({
+    name: 'user',
+    type: 'string',
+    example: '1234',
+    description: 'User ID',
+  })
+  default_user?: Types.ObjectId;
+
   @IsNumber()
   @IsNotEmpty()
   @ApiProperty({

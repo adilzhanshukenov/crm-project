@@ -18,7 +18,7 @@ export class UserProjectService {
   async getAllUsersOfProject(projectId: string): Promise<UserProject[]> {
     return this.userProjectModel
       .find({ project: projectId })
-      .populate('user', '-password -createdAt -updatedAt')
+      .populate('user position', '-password -createdAt -updatedAt')
       .lean(true);
   }
 
